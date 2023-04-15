@@ -1,0 +1,2 @@
+import pickle
+pickle.dump(RCV, open('flight.pkl', 'wb'))
