@@ -76,8 +76,7 @@ x = np.delete(x[4, 5], axis=1)
 flight_data.describe()
 
 # Univariate Analysis
-flight_data = sns.load_dataset("flight_data")
-sns.distplot(data=flight_data.MONTH)
+sns.distplot(flight_data.MONTH)
 
 # Bivariate Analysis
 sns.scatterplot(x='ARR_DELAY', y='ARR_DEL15', data=flight_data)
@@ -110,12 +109,14 @@ y_test.shape
 y_train.shape
 
 # Scaling the Data
+from sklearn.preprocessing import StandardScaler
 sc = StandardScaler()
 x_train = sc.fit_transform(x_train)
 x_test = sc.transform(x_test)
 
 # MODEL BUILDING
 # Decision Tree Model
+from sklearn.tree import DecisionTreeClassifier
 classifier = DecisionTreeClassifier(random_state=0)
 classifier.fit(x_train, y_train)
 
@@ -125,9 +126,11 @@ decisiontree = classifier.predict(x_test)
 
 decisiontree
 
+from sklearn.metrics import accuracy_score
 desacc = accuracy_score(y_test, decisiontree)
 
 # Random Forest Model
+from sklearn.ensemble import RandomForestClassifier
 rfc = RandomFoerstClassifier(n_estimators=10, criterion='entropy')
 
 rfc.fit(x_train, y_train)
@@ -136,6 +139,9 @@ y_predict = rfc.predict(x_test)
 
 # ANN MODEL
 # Importing the keras libraries and packages
+import tensorflow
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layer import Dense
 
 # Creating ANN Skleton view
 classification = Sequential()
@@ -146,14 +152,13 @@ classification.add(Dense(32, activation='relu'))
 classification.add(Dense(1, activation='sigmoid'))
 
 # Compiling the ANN Model
-classification.compile(
-    optimizer='adam', loss='binary_crossentrophy', metrics=['accuracy'])
+classification.compile(optimizer='adam', loss='binary_crossentrophy', metrics=['accuracy'])
 
 # Training the model
-classification.fix(x_train, y_train, batch_size=4,
-                   validation_split=0.2, epochs=100)
+classification.fix(x_train, y_train, batch_size=4, validation_split=0.2, epochs=100)
 
 # Test the model
+#Decision Tree
 y_pred = classifier.predict(
     [[129, 99, 1, 0, 0,  1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1]])
 print(y_pred)
@@ -195,6 +200,8 @@ else:
 
 # Performance Testing & Hyperparameter Tuning
 # Compare The Model
+from sklearn import model_selection
+from sklearn.neural_network import MLPClassifier
 
 dfs = []
 models = [
@@ -221,30 +228,35 @@ for name, model in models:
     dfs.append(this_df)
 
 final = pd.concat(dfs, ignore_index=True)
-# return final
+return final
 
 # RanomForest Accuracy
 print('Training Accuracy: ', accuracy_score(y_train, y_predict_train))
 print('Testing Accuracy: ', accuracy_score(y_test, y_predict))
 
 # Making the Confusion Matrix
+from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_predict)
 cm
 
 # Accuracy score of Destination tree
+from sklearn.metrics import accuracy_score
 desacc = accuracy_score(y_test, decisiontree)
 
 desacc
 
+from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, decisiontree)
 
 cm
 
 # Calculate the Accuracy of ANN
+from sklearn.metrics import accuracy_score, classification_report
 score = accuracy_score(y_pred, y_test)
 print('The Accuracy for ANN model is: {}%'.format(score*100))
 
 # Making the Confusion Matrix
+from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
 cm
 
@@ -293,14 +305,6 @@ cm = confusion_matrix(y_test, decisiontree)
 
 cm
 
-# Calculate the accuracy of ANN
-score = accuracy_score(y_pred, y_test)
-print('The accuracy forA NNN model is: {}%'.format(score*100))
-
-# Making the Confusion Matrix
-cm = confusion_matrix(y_test, y_pred)
-cm
-
 # Comparing Model Accuracy Before & After Applying Hyperparameter Tuning
 # Giving some parameters that can be used in randomized search cv
 parameter = {
@@ -331,7 +335,7 @@ RFC
 
 # Model Deployment
 # Save the best Model
-pickle.dump(RCV, open('flight.pkl', 'wb'))
+pickle.dump(RCV, open('flight.pkl', '////////wb'))
 
 
 # Importing the necessary dependencies
