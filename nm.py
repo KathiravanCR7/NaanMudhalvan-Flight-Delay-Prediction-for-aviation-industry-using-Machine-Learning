@@ -76,7 +76,8 @@ x = np.delete(x[4, 5], axis=1)
 flight_data.describe()
 
 # Univariate Analysis
-sns.distplot(flight_data.MONTH)
+flight_data = sns.load_dataset("flight_data")
+sns.distplot(data=flight_data.MONTH)
 
 # Bivariate Analysis
 sns.scatterplot(x='ARR_DELAY', y='ARR_DEL15', data=flight_data)
